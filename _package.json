@@ -1,0 +1,17 @@
+{
+    "name": "@c4-soft/API_LIB_NAME",
+    "version": "0.0.1",
+    "description": "OpenAPI client for API_LIB_NAME",
+    "author": "OpenAPI-Generator Contributors",
+    "keywords": [
+      "openapi-client",
+      "openapi-generator"
+    ],
+    "license": "Unlicense",
+    "scripts": {
+      "build": "ng-packagr -p ng-package.json"
+    },
+    "peerDependencies": {},
+    "devDependencies": {}
+  }
+  
