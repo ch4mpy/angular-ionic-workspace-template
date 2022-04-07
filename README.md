@@ -21,7 +21,7 @@ npm set init.author.name "ch4mpy"
 npm set init.license "Apache-2.0"
 
 # Prepare a script copy
-cp angular-workspace-template/init.sh $WORKSPACE_NAME.sh
+cp angular-ionic-workspace-template/init.sh $WORKSPACE_NAME.sh
 sed -i 's/WORKSPACE_NAME/'$WORKSPACE_NAME'/g' $WORKSPACE_NAME.sh
 sed -i 's/APP_NAME/'$APP_NAME'/g' $WORKSPACE_NAME.sh
 sed -i 's/API_LIB_NAME/'$API_LIB_NAME'/g' $WORKSPACE_NAME.sh
@@ -30,11 +30,11 @@ sed -i 's/CAPACITOR_ID/'$CAPACITOR_ID'/g' $WORKSPACE_NAME.sh
 sed -i 's/HOSTNAME/'$HOSTNAME'/g' $WORKSPACE_NAME.sh
 sed -i 's/USERNAME/'$USERNAME'/g' $WORKSPACE_NAME.sh
 
-cp angular-workspace-template/_package.json angular-workspace-template/package.json
-sed -i 's/API_LIB_NAME/'$API_LIB_NAME'/g' angular-workspace-template/package.json
+cp angular-ionic-workspace-template/_package.json angular-ionic-workspace-template/package.json
+sed -i 's/API_LIB_NAME/'$API_LIB_NAME'/g' angular-ionic-workspace-template/package.json
 
-cp angular-workspace-template/_index.html angular-workspace-template/index.html
-sed -i 's/APP_NAME/'$APP_NAME'/g' angular-workspace-template/index.html
+cp angular-ionic-workspace-template/_index.html angular-ionic-workspace-template/index.html
+sed -i 's/APP_NAME/'$APP_NAME'/g' angular-ionic-workspace-template/index.html
 
 # Install required tools
 npm i -g @angular/cli
@@ -45,8 +45,8 @@ bash $WORKSPACE_NAME.sh
 
 # cleanup
 rm $WORKSPACE_NAME.sh
-rm angular-workspace-template/package.json
-rm angular-workspace-template/index.html
+rm angular-ionic-workspace-template/package.json
+rm angular-ionic-workspace-template/index.html
 ```
 
 ## What is done
