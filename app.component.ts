@@ -1,9 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Deeplinks } from '@awesome-cordova-plugins/deeplinks/ngx';
 import { MenuController, NavController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { SettingsScreen } from './settings/settings.screen';
-import { UserAccountScreen } from './user-account/user-account.screen';
 import { UserService } from './user.service';
 
 @Component({
@@ -63,7 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private menuController: MenuController,
-    public userService: UserService,
+    readonly userService: UserService,
     private platform: Platform,
     private deeplinks: Deeplinks,
     private navController: NavController,
@@ -92,18 +96,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       .routeWithNavController(this.navController, {})
       .subscribe({
         next: async (match) => {
-          console.log('Deeplink matched: ', match)
+          console.log('Deeplink matched: ', match);
           await this.navController.navigateForward(
             match.$link.path + '?' + match.$link.queryString
           );
-          await this.userService.refresh()
-          this.cdr.detectChanges()
+          this.cdr.detectChanges();
         },
         error: (nomatch) =>
-          console.error(
-            "Deeplink didn't match",
-            JSON.stringify(nomatch)
-          ),
+          console.error("Deeplink didn't match", JSON.stringify(nomatch)),
       });
   }
 }

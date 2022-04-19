@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { UserService } from '../user.service';
 
 @Component({
@@ -37,9 +36,5 @@ export class UserAccountScreen implements OnInit {
 
   logout() {
     this.userService.logout();
-  }
-
-  get redirectUti(): string {
-    return environment.authConfig.redirectUri || ''
   }
 }
