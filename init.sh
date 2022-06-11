@@ -73,16 +73,14 @@ sed -i 's/providers: \[\]/providers: \[\
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },\
     Deeplinks,\
   ]/' ./projects/APP_NAME/src/app/app.module.ts
-ng build
+ng build APP_NAME
 
 # init Ionic and Capacitor tooling
 ionic init --multi-app
 cd ./projects/APP_NAME/
-winpty npx.cmd cap init
-sed -i 's/www/..\/..\/dist\/APP_NAME/' ./capacitor.config.ts
+winpty npx.cmd cap init APP_NAME CAPACITOR_ID --web-dir ../../dist/APP_NAME
 ionic init --type=angular APP_NAME --default
-rm ../../capacitor.config.ts
-ionic cap sync
+ionic capacitor add android
 cd ../..
 
 # add useful npm targets
@@ -170,7 +168,7 @@ cp ../angular-ionic-workspace-template/user.service.ts ./projects/APP_NAME/src/a
 
 echo -e "import { ErrorHttpInterceptor } from './error-http-interceptor';\n\
 $(cat ./projects/APP_NAME/src/app/app.module.ts)" > ./projects/APP_NAME/src/app/app.module.ts
-sed -i 's/providers: \[/providers: \[
+sed -i 's/providers: \[/providers: \[\
     {\
       provide: HTTP_INTERCEPTORS,\
       useClass: ErrorHttpInterceptor,\
