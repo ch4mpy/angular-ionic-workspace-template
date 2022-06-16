@@ -100,7 +100,7 @@ rm angular-ionic-workspace-template/index.html
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https" android:host="bao-loc.c4-soft.com" />
+            <data android:scheme="https" android:host="localhost" />
         </intent-filter>
     ```
 - Configure Android or iOS app to use https.
