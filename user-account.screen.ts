@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 
 @Component({
@@ -8,33 +9,22 @@ import { UserService } from '../user.service';
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>{{ userService.name || 'Compte' }}</ion-title>
+        <ion-title>{{ user.current.displayName || 'Compte' }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <div *ngIf="!userService.name">
-        <ion-button (click)="login()">Login</ion-button>
-      </div>
-      <div *ngIf="!!userService.name">
-        <ion-avatar>
-          <img [src]="userService.picture" />
-        </ion-avatar>
-        <ion-button (click)="logout()">Logout</ion-button>
-      </div>
+        <button mat-raised-button (click)="logout()">Logout</button>
     </ion-content>`,
   styles: [],
 })
 export class UserAccountScreen implements OnInit {
-  constructor(readonly userService: UserService) {}
+  constructor(readonly user: UserService, private router: Router) {}
 
   ngOnInit() {}
 
-  login() {
-    this.userService.login();
-  }
-
   logout() {
-    this.userService.logout();
+    this.user.logout();
+    this.router.navigate(['/'])
   }
 }
