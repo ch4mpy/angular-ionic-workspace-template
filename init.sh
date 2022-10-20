@@ -10,7 +10,6 @@ cd WORKSPACE_NAME
 # add an Angular application to Angular workspace #
 ###################################################
 ng g application --inline-style --inline-template --routing --style=scss "APP_NAME"
-ng config defaultProject "APP_NAME"
 
 
 ###########################################
@@ -161,43 +160,47 @@ sed -i 's/imports: \[/imports: \[\
 # Replace Angular minimal app with an Ionic app composed of a menu in a split-pane and two pages #
 ##################################################################################################
 
-# handle http errors
-ng g c --project="APP_NAME" --type=dialog --flat -s -t NetworkError
+cd projects/APP_NAME/src/app/
 
-cp ../angular-ionic-workspace-template/network-error.dialog.ts "./projects/APP_NAME/src/app/network-error.dialog.ts"
-cp ../angular-ionic-workspace-template/error-http-interceptor.ts "./projects/APP_NAME/src/app/error-http-interceptor.ts"
-cp ../angular-ionic-workspace-template/user.service.ts "./projects/APP_NAME/src/app/user.service.ts"
+# handle http errors
+ng g c --type=dialog --flat -s -t NetworkError
+
+cp ../../../../../angular-ionic-workspace-template/network-error.dialog.ts "./network-error.dialog.ts"
+cp ../../../../../angular-ionic-workspace-template/error-http-interceptor.ts "./error-http-interceptor.ts"
+cp ../../../../../angular-ionic-workspace-template/user.service.ts "./user.service.ts"
 
 echo -e "import { ErrorHttpInterceptor } from './error-http-interceptor';\n\
-$(cat ./projects/APP_NAME/src/app/app.module.ts)" > "./projects/APP_NAME/src/app/app.module.ts"
+$(cat ./app.module.ts)" > "./app.module.ts"
 sed -i 's/providers: \[/providers: \[\
     {\
       provide: HTTP_INTERCEPTORS,\
       useClass: ErrorHttpInterceptor,\
       multi: true,\
     },\
-  ]/' "./projects/APP_NAME/app.module.ts"
+  ]/' "./app.module.ts"
 
 # copy default content
-cp ../angular-ionic-workspace-template/loading.service.ts "./projects/APP_NAME/src/app/loading.service.ts"
-cp ../angular-ionic-workspace-template/has-role.guard.ts "./projects/APP_NAME/src/app/has-role.guard.ts"
+cp ../../../../../angular-ionic-workspace-template/loading.service.ts "./loading.service.ts"
+cp ../../../../../angular-ionic-workspace-template/has-role.guard.ts "./has-role.guard.ts"
 
-ng g c --project="APP_NAME" --type=screen --flat -s -t -m=home
-cp ../angular-ionic-workspace-template/home.screen.ts "./projects/APP_NAME/src/app/home.screen.ts"
+ng g c --type=screen --flat -s -t home
+cp ../../../../../angular-ionic-workspace-template/home.screen.ts "./home.screen.ts"
 
-ng g module --project="APP_NAME" --routing user-account
+ng g module --routing user-account
 echo -e "import { FormsModule, ReactiveFormsModule } from '@angular/forms';\n\
 import { IonicModule } from '@ionic/angular';\n\
-$(cat ./projects/APP_NAME/src/app/user-account/user-account.module.ts)" > "./projects/APP_NAME/src/app/user-account/user-account.module.ts"
+$(cat ./user-account/user-account.module.ts)" > "./user-account/user-account.module.ts"
 sed -i 's/CommonModule,/CommonModule,\
     FormsModule,\
     ReactiveFormsModule,\
-    IonicModule,/' "./projects/APP_NAME/src/app/user-account/user-account.module.ts"
-ng g c --project="APP_NAME" --type=screen --flat -s -t -m=user-account user-account/UserAccount
-cp ../angular-ionic-workspace-template/user-account.screen.ts "./projects/APP_NAME/src/app/user-account/user-account.screen.ts"
-cp ../angular-ionic-workspace-template/user-account-routing.module.ts "./projects/APP_NAME/src/app/user-account/user-account-routing.module.ts"
+    IonicModule,/' "./user-account/user-account.module.ts"
+ng g c --type=screen --flat -s -t -m=user-account user-account/UserAccount
+cp ../../../../../angular-ionic-workspace-template/user-account.screen.ts "./user-account/user-account.screen.ts"
+cp ../../../../../angular-ionic-workspace-template/user-account-routing.module.ts "./user-account/user-account-routing.module.ts"
 
-cp ../angular-ionic-workspace-template/app-routing.module.ts "./projects/APP_NAME/src/app/app-routing.module.ts"
-cp ../angular-ionic-workspace-template/app.component.ts "./projects/APP_NAME/src/app/app.component.ts"
+cp ../../../../../angular-ionic-workspace-template/app-routing.module.ts "./app-routing.module.ts"
+cp ../../../../../angular-ionic-workspace-template/app.component.ts "./app.component.ts"
 
+cd ../../../../
 sed -i 's/\/node_modules/**\/node_modules/' ./.gitignore
+git add ionic.config.json openapitools.json projects/ .gitignore angular.json package-lock.json package.json tsconfig.json
