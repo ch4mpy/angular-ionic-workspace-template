@@ -13,25 +13,33 @@ export class User {
   }
 
   static of(userData?: any): User {
-    const realmRoles: string[] = userData?.realm_access?.roles || []
-    if(environment.authConfig.config?.constructor?.name === 'OpenIdConfiguration[]') {
-      throw 'Update User class to pick clientId from the right configuration'
+    const realmRoles: string[] = userData?.realm_access?.roles || [];
+    if (
+      environment.authConfig.config?.constructor?.name ===
+      'OpenIdConfiguration[]'
+    ) {
+      throw 'Update User class to pick clientId from the right configuration';
     }
-    var clientId = (environment.authConfig.config as OpenIdConfiguration)?.clientId
+    var clientId = (environment.authConfig.config as OpenIdConfiguration)
+      ?.clientId;
     const clientRoles: string[] =
       userData?.resource_access && clientId
         ? userData.resource_access[clientId]?.roles || []
-        : []
-    return userData?.preferred_username
+        : [];
+
+    const name =
+      userData?.preferred_username || userData?.name || userData?.email;
+    const displayName = userData?.nickname || name;
+    return name
       ? new User(
-          userData?.preferred_username,
-          userData?.name || userData?.preferred_username,
+          name,
+          displayName,
           realmRoles
             .concat(clientRoles)
             .map((r) => r?.trim()?.toUpperCase())
-            .filter((r) => !!r?.length),
+            .filter((r) => !!r?.length)
         )
-      : User.ANONYMOUS
+      : User.ANONYMOUS;
   }
 }
 
