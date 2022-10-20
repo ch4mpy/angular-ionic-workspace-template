@@ -176,8 +176,7 @@ sed -i 's/providers: \[/providers: \[\
       provide: HTTP_INTERCEPTORS,\
       useClass: ErrorHttpInterceptor,\
       multi: true,\
-    },\
-  ]/' "./app.module.ts"
+    },\' "./app.module.ts"
 
 # copy default content
 cp ../../../../../angular-ionic-workspace-template/loading.service.ts "./loading.service.ts"
