@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Deeplinks } from '@awesome-cordova-plugins/deeplinks/ngx';
 import { MenuController, NavController, Platform } from '@ionic/angular';
+import { map, Observable } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { UserService } from './user.service';
 
@@ -29,7 +30,7 @@ import { UserService } from './user.service';
                   routerLink="/account"
                   lines="none"
                   detail="false"
-                  *ngIf="user.current.isAuthenticated"
+                  *ngIf="isAuthenticated | async"
                 >
                   <ion-icon slot="start" name="person-circle"></ion-icon>
                   <ion-label>{{ user.current.displayName }}</ion-label>
@@ -37,7 +38,7 @@ import { UserService } from './user.service';
                 <ion-item
                   lines="none"
                   detail="false"
-                  *ngIf="!user.current.isAuthenticated"
+                  *ngIf="!(isAuthenticated | async)"
                   (click)="user.login()"
                 >
                   <ion-icon slot="start" name="person-circle"></ion-icon>
@@ -89,6 +90,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.deeplinksRouteSubscription?.unsubscribe();
+  }
+  
+  get isAuthenticated(): Observable<boolean> {
+    return this.user.valueChanges.pipe(map(u => u.isAuthenticated))
   }
 
   private setupDeeplinks() {
