@@ -20,7 +20,7 @@ winpty ng.cmd g library @c4-soft/API_LIB_NAME
 npm i -D @openapitools/openapi-generator-cli
 sed -i 's/"ng": "ng",/"ng": "ng",\
     "postinstall": "npm run API_LIB_NAME:install",\
-    "API_LIB_NAME:generate": "npx openapi-generator-cli generate -i ..\/API_SPEC_FILE -g typescript-angular --type-mappings AnyType=any --additional-properties=serviceSuffix=Api,npmName=@c4-soft\/API_LIB_NAME,npmVersion=0.0.1,stringEnums=true,enumPropertyNaming=camelCase,supportsES6=true,withInterfaces=true --remove-operation-id-prefix -o projects\/c4-soft\/API_LIB_NAME",\
+    "API_LIB_NAME:generate": "npx openapi-generator-cli generate -i ..\/API_SPEC_FILE -g typescript-angular --type-mappings AnyType=any --additional-properties=serviceSuffix=Api,npmName=@c4-soft\/API_LIB_NAME,npmVersion=0.0.1,enumPropertyNaming=camelCase,supportsES6=true,withInterfaces=true --remove-operation-id-prefix -o projects\/c4-soft\/API_LIB_NAME",\
     "API_LIB_NAME:build": "npm run API_LIB_NAME:generate \&\& npm run ng -- build @c4-soft\/API_LIB_NAME --configuration production",\
     "API_LIB_NAME:install": "cd projects\/c4-soft\/API_LIB_NAME \&\& npm i \&\& cd ..\/..\/.. \&\& npm run API_LIB_NAME:build",/' ./package.json
 cp ../angular-ionic-workspace-template/openapitools.json ./
@@ -41,7 +41,7 @@ npm i
 
 # dependencies
 npm i -D @ionic/angular-toolkit
-cd ./projects/APP_NAME/
+cd "./projects/APP_NAME/"
 npm init --yes
 npm i @capacitor/core @capacitor/app @capacitor/haptics @capacitor/keyboard @capacitor/status-bar @ionic/angular ionicons @awesome-cordova-plugins/core @ionic/storage-angular ionic-plugin-deeplinks @awesome-cordova-plugins/deeplinks
 npm i -D @capacitor/cli
@@ -52,7 +52,7 @@ sed -i 's/"projects\/APP_NAME\/src\/assets"/"projects\/APP_NAME\/src\/assets",\
               { "glob": "**\/*.svg", "input": "projects\/APP_NAME\/node_modules\/ionicons\/dist\/ionicons\/svg", "output": ".\/svg" }/' ./angular.json
 
 # add Ionic theme style sheet
-cp ../angular-ionic-workspace-template/styles.scss ./projects/APP_NAME/src/styles.scss
+cp ../angular-ionic-workspace-template/styles.scss "./projects/APP_NAME/src/styles.scss"
 
 # replace index.html
 cp ../angular-ionic-workspace-template/index.html ./projects/APP_NAME/src/index.html
@@ -67,7 +67,7 @@ $(cat ./projects/APP_NAME/src/app/app.module.ts)" > ./projects/APP_NAME/src/app/
 sed -i 's/BrowserModule,/BrowserModule,\
     HttpClientModule,\
     IonicModule.forRoot(),\
-    IonicStorageModule.forRoot(),/' ./projects/APP_NAME/src/app/app.module.ts
+    IonicStorageModule.forRoot(),/' "./projects/APP_NAME/src/app/app.module.ts"
 sed -i 's/providers: \[\]/providers: \[\
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },\
     Deeplinks,\
@@ -82,6 +82,7 @@ winpty npx.cmd cap init APP_NAME CAPACITOR_ID --web-dir ../../dist/APP_NAME
 ionic init --type=angular APP_NAME --default --project=APP_NAME
 ionic capacitor add android
 cd ../..
+rm ./capacitor.config.ts
 
 # add useful npm targets
 sed -i 's/"test": "echo \\"Error: no test specified\\" \&\& exit 1"/"test": "ionic test",\
@@ -101,7 +102,7 @@ sed -i '/"watch":/d' ./package.json
 
 winpty ng.cmd add @angular/material --project=APP_NAME
 
-npm i angular-auth-oidc-client
+npm i angular-auth-oidc-client @angular/flex-layout @angular/cdk
 
 # add OIDC conf to environment files
 echo -e "import { LogLevel, PassedInitialConfig } from 'angular-auth-oidc-client';\n\
@@ -143,44 +144,51 @@ export const authConfig: PassedInitialConfig = {\n\
 export const environment = {\n\
   production: true,\n\
   authConfig,\n\
-};" > ./projects/APP_NAME/src/environments/environment.prod.ts
+};" > "./projects/APP_NAME/src/environments/environment.prod.ts"
 
 # import OAuthModule in app module
 echo -e "import { AuthModule } from 'angular-auth-oidc-client';\n\
 import { MatDialogModule } from '@angular/material/dialog';\n\
 import { environment } from '../environments/environment';\n\
-$(cat ./projects/APP_NAME/src/app/app.module.ts)" > ./projects/APP_NAME/src/app/app.module.ts
+$(cat ./projects/APP_NAME/src/app/app.module.ts)" > "./projects/APP_NAME/src/app/app.module.ts"
 sed -i 's/imports: \[/imports: \[\
     AuthModule.forRoot(environment.authConfig),\
-    MatDialogModule,/' ./projects/APP_NAME/src/app/app.module.ts
+    MatDialogModule,/' "./projects/APP_NAME/src/app/app.module.ts"
 
 
 ##################################################################################################
 # Replace Angular minimal app with an Ionic app composed of a menu in a split-pane and two pages #
 ##################################################################################################
 
-# handle http errors
 winpty ng.cmd g c --project=APP_NAME --type=dialog --flat -s -t NetworkError
 
-cp ../angular-ionic-workspace-template/network-error.dialog.ts ./projects/APP_NAME/src/app/network-error.dialog.ts
-cp ../angular-ionic-workspace-template/error-http-interceptor.ts ./projects/APP_NAME/src/app/error-http-interceptor.ts
-cp ../angular-ionic-workspace-template/user.service.ts ./projects/APP_NAME/src/app/user.service.ts
+# handle http errors
+ng g c --type=dialog --flat -s -t NetworkError
+
+cp ../../../../../angular-ionic-workspace-template/network-error.dialog.ts "./network-error.dialog.ts"
+cp ../../../../../angular-ionic-workspace-template/error-http-interceptor.ts "./error-http-interceptor.ts"
+cp ../../../../../angular-ionic-workspace-template/user.service.ts "./user.service.ts"
 
 echo -e "import { ErrorHttpInterceptor } from './error-http-interceptor';\n\
-$(cat ./projects/APP_NAME/src/app/app.module.ts)" > ./projects/APP_NAME/src/app/app.module.ts
+$(cat ./app.module.ts)" > "./app.module.ts"
 sed -i 's/providers: \[/providers: \[\
     {\
       provide: HTTP_INTERCEPTORS,\
       useClass: ErrorHttpInterceptor,\
       multi: true,\
-    },\
-  ]/' ./projects/APP_NAME/app.module.ts
+    },\' "./app.module.ts"
 
 # copy default content
-ng g module --project=APP_NAME --routing settings
+cp ../../../../../angular-ionic-workspace-template/loading.service.ts "./loading.service.ts"
+cp ../../../../../angular-ionic-workspace-template/has-role.guard.ts "./has-role.guard.ts"
+
+ng g c --type=screen --flat -s -t home
+cp ../../../../../angular-ionic-workspace-template/home.screen.ts "./home.screen.ts"
+
+ng g module --routing user-account
 echo -e "import { FormsModule, ReactiveFormsModule } from '@angular/forms';\n\
 import { IonicModule } from '@ionic/angular';\n\
-$(cat ./projects/APP_NAME/src/app/settings/settings.module.ts)" > ./projects/APP_NAME/src/app/settings/settings.module.ts
+$(cat ./user-account/user-account.module.ts)" > "./user-account/user-account.module.ts"
 sed -i 's/CommonModule,/CommonModule,\
     FormsModule,\
     ReactiveFormsModule,\
@@ -204,4 +212,6 @@ cp ../angular-ionic-workspace-template/user-account-routing.module.ts ./projects
 cp ../angular-ionic-workspace-template/app-routing.module.ts ./projects/APP_NAME/src/app/app-routing.module.ts
 cp ../angular-ionic-workspace-template/app.component.ts ./projects/APP_NAME/src/app/app.component.ts
 
+cd ../../../../
 sed -i 's/\/node_modules/**\/node_modules/' ./.gitignore
+git add ionic.config.json openapitools.json projects/ .gitignore angular.json package-lock.json package.json tsconfig.json

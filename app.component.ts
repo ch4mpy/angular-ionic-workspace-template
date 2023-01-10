@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Deeplinks } from '@awesome-cordova-plugins/deeplinks/ngx';
 import { MenuController, NavController, Platform } from '@ionic/angular';
+import { map, Observable } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { UserService } from './user.service';
 
@@ -29,28 +30,28 @@ import { UserService } from './user.service';
                   routerLink="/account"
                   lines="none"
                   detail="false"
-                  *ngIf="userService.isAuthenticated"
+                  *ngIf="isAuthenticated | async"
                 >
                   <ion-icon slot="start" name="person-circle"></ion-icon>
-                  <ion-label>{{ userService.name }}</ion-label>
+                  <ion-label>{{ user.current.displayName }}</ion-label>
                 </ion-item>
                 <ion-item
                   lines="none"
                   detail="false"
-                  *ngIf="!userService.isAuthenticated"
-                  (click)="userService.login()"
+                  *ngIf="!(isAuthenticated | async)"
+                  (click)="user.login()"
                 >
                   <ion-icon slot="start" name="person-circle"></ion-icon>
                   <ion-label>Login</ion-label>
                 </ion-item>
                 <ion-item
                   routerDirection="root"
-                  routerLink="/settings"
+                  routerLink="/home"
                   lines="none"
                   detail="false"
                 >
-                  <ion-icon slot="start" name="settings"></ion-icon>
-                  <ion-label>Configuration</ion-label>
+                  <ion-icon slot="start" name="home"></ion-icon>
+                  <ion-label>Home</ion-label>
                 </ion-item>
               </ion-list>
             </ion-menu-toggle>
@@ -67,7 +68,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private menuController: MenuController,
-    readonly userService: UserService,
+    readonly user: UserService,
     private platform: Platform,
     private deeplinks: Deeplinks,
     private navController: NavController,
@@ -89,6 +90,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.deeplinksRouteSubscription?.unsubscribe();
+  }
+  
+  get isAuthenticated(): Observable<boolean> {
+    return this.user.valueChanges.pipe(map(u => u.isAuthenticated))
   }
 
   private setupDeeplinks() {
